@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<head>
+  <title>Galaxy-VR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <style>body { margin: 0; overflow: hidden !important;height: 100vh; width: 100%; }</style>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./static_assets/apple-touch-icon.png">
+  <link rel="manifest" href="./static_assets/manifest.json">
+  <link rel="mask-icon" href="./static_assets/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preload" as="image" href="./static_assets/background.webp" media="(min-width: 600px)">
+  <link rel="preload" as="image" href="./static_assets/static_background.png" media="(min-width: 800px)">
+  <link rel="stylesheet" type="text/css" href="./main.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="./rockets.ico">
+  <script>
+    document.ontouchmove = function(e){ e.preventDefault(); }
+  </script>
+</head>
+<body onload="setTimeout(function() { window.scrollTo(0, 0) }, 100);">
+
+  <div class = "modal_box modal_box1" style="z-index:10">
+    <div class="modal_content modal_content1" style="background: rgba(0,0,0,0);color:white;">
+
+      <video width="500px" height="500px" src type="video/mp4" id="gif" loop autoplay preload style="opacity:.78">
+      </video>
+      <div class="gases"><h4 style="color:gold;">Major Gases</h4><hr style="margin-top: -17px;margin-bottom: -15px;"><div id="gases"></div></div>
+    </div>
+  </div>
+  <div class="main-background" style="position:absolute;pointer-events: none;z-index:8;opacity:0;overflow:hidden;">
+    <img class="img-size" src="./static_assets/test.png" style="overflow:hidden" />
+  </div>
+
+  <!-- Preloader -->
+  <div id="preload" style="
+  position: relative;
+  width: 100%;
+  height: 100vh !important;
+  background-image: URL('./static_assets/background.webp');
+  background-size: cover;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 2s;
+  overflow:hidden;
+  ">
+  <div id="preload-count" style="font: 'Lato', cursive;color: white;font-size: 100px;z-index: 9999;">0%</div>
+</div>
+<!-- / Preloader -->
+<!-- Initializing -->
+
+
+<!-- / Initializing -->
+<script src="https://code.createjs.com/preloadjs-0.6.2.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+
+<script src="./client.bundle.js"></script>
+
+<script>
+
+  if ($(window).width() > 1024) {
+    setTimeout(()=>{
+      $('#preload').css('background-image','URL(./static_assets/static_background.png)')
+    },14000)
+  }
+  /* Preload */
+  var queue = new createjs.LoadQueue();
+
+  var preloadElem = document.getElementById('preload');
+  var preloadProgressElem = document.getElementById('preload-count');
+
+  queue.on('complete', onComplete);
+  queue.on('progress', onProgress);
+  queue.loadManifest([
+  {
+    "id": 1,
+    "src": "static_assets/earth.obj"
+  },
+  {
+    "id": 2,
+    "src": "static_assets/earth.mtl"
+  },
+  {
+    "id": 3,
+    "src": "static_assets/nebula.jpg"
+  },
+  {
+    "id": 4,
+    "src": "static_assets/mercury.obj"
+  },
+  {
+    "id": 5,
+    "src": "static_assets/mercury.mtl"
+  },
+  {
+    "id": 6,
+    "src": "static_assets/venus.obj"
+  },
+  {
+    "id": 7,
+    "src": "static_assets/venus.mtl"
+  },
+  {
+    "id": 8,
+    "src": "static_assets/saturn.obj"
+  },
+  {
+    "id": 9,
+    "src": "static_assets/saturn.mtl"
+  },
+  {
+    "id": 10,
+    "src": "static_assets/jupiter.obj"
+  },
+  {
+    "id": 11,
+    "src": "static_assets/jupiter.mtl"
+  },
+  {
+    "id": 12,
+    "src": "static_assets/mars.obj"
+  },
+  {
+    "id": 13,
+    "src": "static_assets/mars.mtl"
+  },
+  {
+    "id": 14,
+    "src": "static_assets/uranus.obj"
+  },
+  {
+    "id": 15,
+    "src": "static_assets/uranus.mtl"
+  },
+  {
+    "id": 16,
+    "src": "static_assets/neptune.obj"
+  },
+  {
+    "id": 17,
+    "src": "static_assets/neptune.mtl"
+  }])
+
+
+  function onProgress(event) {
+    var progress = Math.round(event.loaded * 100);
+    preloadProgressElem.firstChild.nodeValue = progress + '%';
+  }
+
+  function onComplete(event) {
+
+  // Initialize the React VR application
+  ReactVR.init(
+    'index.bundle.js?platform=vr&dev=false',
+    document.body,
+    {
+      cursorVisibility: 'visible',
+    },
+    );
+}
+
+</script>
+<script type="text/javascript">
+
+  $('.modal_box').on("click",()=>{
+    $(".modal_box").removeClass('active');
+    $(".gases").removeClass('active');
+    $(".modal_box").addClass('close');
+  })
+  window.onload = function () {
+    setTimeout(function(){
+      $('#preload-count').attr('style',"position: absolute; left: 50%; top: 47%; color: white; box-sizing: border-box; display: block; width: 150px; z-index: 9; text-align: center; margin-left: -75px; font: 'Lato', cursive; font-size:26px;font-weight:bolder; border: 3px solid white; padding: 10px 20px; background: linear-gradient(45deg, #30777f, rgba(24, 36, 209, .2)); border-radius: 1px; overflow:hidden;")
+      $('#preload-count').html("Enter")
+      var initElem = document.getElementById('preload-count');
+
+      initElem.addEventListener("click",()=>{
+        $('.main-background').css('opacity',1);
+        $(preloadElem).addClass('close');
+        $(preloadElem).css('position','absolute');
+        setTimeout(()=>{
+          $(preloadElem).css('z-index','-999');
+
+        },500)
+
+        initElem.remove();
+      })
+    }, 6500);
+  }
+</script>
+</body>
+</html>
+
